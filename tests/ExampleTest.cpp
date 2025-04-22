@@ -1,9 +1,25 @@
-﻿#include "gtest/gtest.h"
-#include "ExampleClass.h"
+﻿#include "PasswordEntry.h"
+#include "PasswordManager.h"
+#include "gtest/gtest.h"
 
-TEST(ExampleClassTestSuite, Add)
+TEST(PasswordManagerTestSuite, Add)
 {
-    ExampleClass exampleClass;
-    EXPECT_EQ(exampleClass.add(1, 2), 3);
-    // EXPECT_EQ(3, 3);
+    PasswordManager manager;
+
+    const PasswordEntry entry
+    {
+        "Gmail",
+        "John",
+        "pass1234",
+        std::nullopt
+    };
+
+    manager.addEntry(entry);
+
+    const std::vector<PasswordEntry> entries = manager.getEntries();
+    ASSERT_EQ(entries.size(), 1);
+    EXPECT_EQ(entries[0].name, entry.name);
+    EXPECT_EQ(entries[0].login, entry.login);
+    EXPECT_EQ(entries[0].password, entry.password);
+    EXPECT_EQ(entries[0].notes, entry.notes);
 }
