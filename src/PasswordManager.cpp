@@ -12,7 +12,7 @@ void PasswordManager::addEntry(const PasswordEntry& entry)
 
 void PasswordManager::removeEntry(const std::string& name)
 {
-    if (const int elementsQuantity = entries.erase(name); elementsQuantity == 0)
+    if (const size_t elementsQuantity = entries.erase(name); elementsQuantity == 0)
     {
         throw std::invalid_argument("Entry not found");
     }
