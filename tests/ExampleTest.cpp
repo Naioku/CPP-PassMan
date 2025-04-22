@@ -16,10 +16,48 @@ TEST(PasswordManagerTestSuite, Add)
 
     manager.addEntry(entry);
 
-    const std::vector<PasswordEntry> entries = manager.getEntries();
+    const std::map<std::string, PasswordEntry> entries = manager.getEntries();
     ASSERT_EQ(entries.size(), 1);
-    EXPECT_EQ(entries[0].name, entry.name);
-    EXPECT_EQ(entries[0].login, entry.login);
-    EXPECT_EQ(entries[0].password, entry.password);
-    EXPECT_EQ(entries[0].notes, entry.notes);
+
+    auto& [name, login, password, notes] = entries.at(entry.name);
+    EXPECT_EQ(name, entry.name);
+    EXPECT_EQ(login, entry.login);
+    EXPECT_EQ(password, entry.password);
+    EXPECT_EQ(notes, entry.notes);
+}
+
+TEST(PasswordManagerTestSuite, AddDuplicate)
+{
+    PasswordManager manager;
+
+    const PasswordEntry entry
+    {
+        "Gmail",
+        "John",
+        "pass1234",
+        std::nullopt
+    };
+
+    manager.addEntry(entry);
+    EXPECT_THROW(manager.addEntry(entry), std::invalid_argument);
+}
+
+TEST(PasswordManagerTestSuite, Remove)
+{
+    PasswordManager manager;
+
+    const PasswordEntry entry
+    {
+        "Gmail",
+        "John",
+        "pass1234",
+        std::nullopt
+    };
+
+    manager.addEntry(entry);
+
+    ASSERT_EQ(manager.getEntries().size(), 1);
+
+    manager.removeEntry(entry.name);
+    EXPECT_EQ(manager.getEntries().size(), 0);
 }
