@@ -61,3 +61,9 @@ TEST(PasswordManagerTestSuite, Remove)
     manager.removeEntry(entry.name);
     EXPECT_EQ(manager.getEntries().size(), 0);
 }
+
+TEST(PasswordManagerTestSuite, RemoveNonExisting)
+{
+    PasswordManager manager;
+    EXPECT_THROW(manager.removeEntry("Gmail"), std::invalid_argument);
+}
