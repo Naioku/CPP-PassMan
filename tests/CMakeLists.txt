@@ -1,5 +1,5 @@
 ﻿add_executable(Tests
-        ExampleTest.cpp
+        PasswordManager.cpp
 )
 
 target_link_libraries(Tests
