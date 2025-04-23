@@ -1,5 +1,7 @@
 ﻿#include "PasswordEntry.h"
 #include "PasswordManager.h"
+
+#include "Utils.h"
 #include "gtest/gtest.h"
 
 TEST(PasswordManagerTestSuite, Add)
@@ -66,4 +68,73 @@ TEST(PasswordManagerTestSuite, RemoveNonExisting)
 {
     PasswordManager manager;
     EXPECT_THROW(manager.removeEntry("Gmail"), std::invalid_argument);
+}
+
+TEST(PasswordManagerTestSuite, FilteringByNameCaseSensitive)
+{
+    PasswordManager manager;
+
+    manager.addEntry(
+    {
+        "Gmail",
+        "John",
+        "pass1234",
+        std::nullopt
+    });
+
+    manager.addEntry({
+        "Gmail2",
+        "Name",
+        "pass1234",
+        std::nullopt
+    });
+
+    manager.addEntry({
+        "Gmail3",
+        "Name",
+        "pass1234",
+        std::nullopt
+    });
+
+    const std::vector<PasswordEntry> entries = manager.getEntries("Gma");
+    ASSERT_EQ(entries.size(), 3);
+
+    for (auto entry : entries)
+    {
+        EXPECT_TRUE(Utils::isSubsting(entry.name, "Gma"));
+    }
+}
+
+TEST(PasswordManagerTestSuite, FilteringByNameCaseInsensitive)
+{
+    PasswordManager manager;
+
+    manager.addEntry({
+        "Gmail",
+        "John",
+        "pass1234",
+        std::nullopt
+    });
+
+    manager.addEntry({
+        "Gmail2",
+        "Name",
+        "pass1234",
+        std::nullopt
+    });
+
+    manager.addEntry({
+        "Gmail3",
+        "Name",
+        "pass1234",
+        std::nullopt
+    });
+
+    const std::vector<PasswordEntry> entries = manager.getEntries("gmail");
+    ASSERT_EQ(entries.size(), 3);
+
+    for (auto entry : entries)
+    {
+        EXPECT_TRUE(Utils::isSubsting(entry.name, "Gmail"));
+    }
 }

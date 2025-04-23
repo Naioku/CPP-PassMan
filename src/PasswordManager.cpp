@@ -1,6 +1,25 @@
 ﻿#include "PasswordManager.h"
 
+#include <algorithm>
+#include <ranges>
 #include <stdexcept>
+
+#include "Utils.h"
+
+
+std::vector<PasswordEntry> PasswordManager::getEntries(const std::string& name) const
+{
+    std::vector<PasswordEntry> result;
+    for (const auto& [entryName, entry] : entries)
+    {
+        if (Utils::isSubsting(entryName, name, false))
+        {
+            result.push_back(entry);
+        }
+    }
+
+    return result;
+}
 
 void PasswordManager::addEntry(const PasswordEntry& entry)
 {
