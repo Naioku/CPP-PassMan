@@ -4,22 +4,50 @@
 #include "Utils.h"
 #include "gtest/gtest.h"
 
-TEST(PasswordManagerTestSuite, Add)
+class PasswordManagerFixture : public testing::Test
 {
-    PasswordManager manager;
+protected:
+    std::unique_ptr<PasswordManager> manager = std::make_unique<PasswordManager>();
 
+    void SetUp() override
+    {
+        manager->addEntry({
+            "Gmail1",
+            "John1",
+            "pass1234",
+            std::nullopt
+        });
+
+        manager->addEntry({
+            "Gmail2",
+            "John2",
+            "pass1234",
+            std::nullopt
+        });
+
+        manager->addEntry({
+            "Gmail3",
+            "John3",
+            "pass1234",
+            std::nullopt
+        });
+    }
+};
+
+TEST_F(PasswordManagerFixture, Add)
+{
     const PasswordEntry entry
     {
-        "Gmail",
-        "John",
+        "Gmail4",
+        "John4",
         "pass1234",
         std::nullopt
     };
 
-    manager.addEntry(entry);
+    manager->addEntry(entry);
 
-    const std::map<std::string, PasswordEntry> entries = manager.getEntries();
-    ASSERT_EQ(entries.size(), 1);
+    const std::map<std::string, PasswordEntry> entries = manager->getEntries();
+    ASSERT_EQ(entries.size(), 4);
 
     auto& [name, login, password, notes] = entries.at(entry.name);
     EXPECT_EQ(name, entry.name);
@@ -28,112 +56,49 @@ TEST(PasswordManagerTestSuite, Add)
     EXPECT_EQ(notes, entry.notes);
 }
 
-TEST(PasswordManagerTestSuite, AddDuplicate)
+TEST_F(PasswordManagerFixture, AddDuplicate)
 {
-    PasswordManager manager;
-
     const PasswordEntry entry
     {
-        "Gmail",
+        "Gmail1",
         "John",
         "pass1234",
         std::nullopt
     };
 
-    manager.addEntry(entry);
-    EXPECT_THROW(manager.addEntry(entry), std::invalid_argument);
+    EXPECT_THROW(manager->addEntry(entry), std::invalid_argument);
 }
 
-TEST(PasswordManagerTestSuite, Remove)
+TEST_F(PasswordManagerFixture, Remove)
 {
-    PasswordManager manager;
+    const size_t prevSize = manager->getEntries().size();
 
-    const PasswordEntry entry
-    {
-        "Gmail",
-        "John",
-        "pass1234",
-        std::nullopt
-    };
-
-    manager.addEntry(entry);
-
-    ASSERT_EQ(manager.getEntries().size(), 1);
-
-    manager.removeEntry(entry.name);
-    EXPECT_EQ(manager.getEntries().size(), 0);
+    manager->removeEntry("Gmail1");
+    EXPECT_EQ(manager->getEntries().size(), prevSize - 1);
 }
 
-TEST(PasswordManagerTestSuite, RemoveNonExisting)
+TEST_F(PasswordManagerFixture, RemoveNonExisting)
 {
-    PasswordManager manager;
-    EXPECT_THROW(manager.removeEntry("Gmail"), std::invalid_argument);
+    EXPECT_THROW(manager->removeEntry("Non existing entry"), std::invalid_argument);
 }
 
-TEST(PasswordManagerTestSuite, FilteringByNameCaseSensitive)
+TEST_F(PasswordManagerFixture, FilteringByNameCaseSensitive)
 {
-    PasswordManager manager;
-
-    manager.addEntry(
-    {
-        "Gmail",
-        "John",
-        "pass1234",
-        std::nullopt
-    });
-
-    manager.addEntry({
-        "Gmail2",
-        "Name",
-        "pass1234",
-        std::nullopt
-    });
-
-    manager.addEntry({
-        "Gmail3",
-        "Name",
-        "pass1234",
-        std::nullopt
-    });
-
-    const std::vector<PasswordEntry> entries = manager.getEntries("Gma");
+    const std::vector<PasswordEntry> entries = manager->getEntries("Gma");
     ASSERT_EQ(entries.size(), 3);
 
-    for (auto entry : entries)
+    for (const auto& entry : entries)
     {
         EXPECT_TRUE(Utils::isSubsting(entry.name, "Gma"));
     }
 }
 
-TEST(PasswordManagerTestSuite, FilteringByNameCaseInsensitive)
+TEST_F(PasswordManagerFixture, FilteringByNameCaseInsensitive)
 {
-    PasswordManager manager;
-
-    manager.addEntry({
-        "Gmail",
-        "John",
-        "pass1234",
-        std::nullopt
-    });
-
-    manager.addEntry({
-        "Gmail2",
-        "Name",
-        "pass1234",
-        std::nullopt
-    });
-
-    manager.addEntry({
-        "Gmail3",
-        "Name",
-        "pass1234",
-        std::nullopt
-    });
-
-    const std::vector<PasswordEntry> entries = manager.getEntries("gmail");
+    const std::vector<PasswordEntry> entries = manager->getEntries("gmail");
     ASSERT_EQ(entries.size(), 3);
 
-    for (auto entry : entries)
+    for (const auto& entry : entries)
     {
         EXPECT_TRUE(Utils::isSubsting(entry.name, "Gmail"));
     }
