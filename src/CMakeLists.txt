@@ -9,7 +9,10 @@ add_library(PassManLib STATIC
         CryptoEngine.cpp
         CryptoEngine.h
         ICryptoEngine.h
+        Storage.cpp
+        Storage.h
 )
 
 target_include_directories(PassManLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(PassManLib PUBLIC sodium)
+target_link_libraries(PassManLib PUBLIC nlohmann_json::nlohmann_json)
