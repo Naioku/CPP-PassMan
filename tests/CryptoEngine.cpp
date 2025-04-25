@@ -4,23 +4,32 @@
 
 TEST(CryptoEngineTestSuite, Encrypt)
 {
-    CryptoEngine engine;
+    const CryptoEngine engine;
     const std::string plaintext = "secret";
-    const std::string key = "supersecure";
+    const std::string password = "supersecure";
 
-    const std::string encrypted = engine.encrypt(plaintext, key);
+    const std::string encrypted = engine.encrypt(plaintext, password);
 
     EXPECT_NE(encrypted, plaintext);
 }
 
-TEST(CryptoEngineTestSuite, EncryptAndDecrypt)
+TEST(CryptoEngineTestSuite, Decrypt)
 {
-    CryptoEngine engine;
+    const CryptoEngine engine;
     const std::string plaintext = "secret";
-    const std::string key = "supersecure";
+    const std::string password = "supersecure";
 
-    const std::string encrypted = engine.encrypt(plaintext, key);
-    const std::string decrypted = engine.decrypt(encrypted, key);
+    const std::string encrypted = engine.encrypt(plaintext, password);
+    const std::string decrypted = engine.decrypt(encrypted, password);
 
     EXPECT_EQ(decrypted, plaintext);
+}
+
+TEST(CryptoEngineTestSuite, WrongPassword)
+{
+    const CryptoEngine engine;
+    const std::string plaintext = "secret";
+    const std::string password = "supersecure";
+    const std::string encrypted = engine.encrypt(plaintext, password);
+    EXPECT_THROW(engine.decrypt(encrypted, "wrongpassword"), std::runtime_error);
 }

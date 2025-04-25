@@ -8,13 +8,16 @@ constexpr size_t NONCE_SIZE = crypto_secretbox_NONCEBYTES;
 constexpr size_t KEY_SIZE = crypto_secretbox_KEYBYTES;
 constexpr size_t SALT_SIZE = crypto_pwhash_SALTBYTES;
 
-std::string CryptoEngine::encrypt(const std::string& plaintext, const std::string& password) const
+CryptoEngine::CryptoEngine()
 {
     if (sodium_init() < 0)
     {
         throw std::runtime_error("libsodium init failed");
     }
+}
 
+std::string CryptoEngine::encrypt(const std::string& plaintext, const std::string& password) const
+{
     unsigned char salt[SALT_SIZE];
     randombytes_buf(salt, sizeof salt);
 
@@ -53,11 +56,6 @@ std::string CryptoEngine::encrypt(const std::string& plaintext, const std::strin
 
 std::string CryptoEngine::decrypt(const std::string& ciphertext, const std::string& password) const
 {
-    if (sodium_init() < 0)
-    {
-        throw std::runtime_error("libsodium init failed");
-    }
-
     if (ciphertext.size() < SALT_SIZE + NONCE_SIZE + crypto_secretbox_MACBYTES)
     {
         throw std::runtime_error("text too short");
