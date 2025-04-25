@@ -11,6 +11,8 @@ add_library(PassManLib STATIC
         ICryptoEngine.h
         Storage.cpp
         Storage.h
+        PasswordGenerator.cpp
+        PasswordGenerator.h
 )
 
 target_include_directories(PassManLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

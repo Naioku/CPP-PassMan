@@ -3,6 +3,7 @@
         Utils.cpp
         CryptoEngine.cpp
         Storage.cpp
+        PasswordGenerator.cpp
 )
 
 target_link_libraries(Tests
