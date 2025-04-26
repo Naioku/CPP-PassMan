@@ -13,6 +13,9 @@ class Storage {
 
 public:
     explicit Storage(std::shared_ptr<ICryptoEngine> cryptoEngine, std::string path);
+
+    void setPath(std::string path);
+
     void saveToFile(const std::map<std::string, PasswordEntry>& entries, const std::string& password) const;
     std::map<std::string, PasswordEntry> loadFromFile(const std::string& password) const;
 };

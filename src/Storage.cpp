@@ -8,6 +8,11 @@ Storage::Storage(std::shared_ptr<ICryptoEngine> cryptoEngine, std::string path):
 {
 }
 
+void Storage::setPath(std::string path)
+{
+    this->path = std::move(path);
+}
+
 void Storage::saveToFile(const std::map<std::string, PasswordEntry>& entries, const std::string& password) const
 {
     nlohmann::json j;

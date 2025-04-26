@@ -36,3 +36,23 @@ void PasswordManager::removeEntry(const std::string& name)
         throw std::invalid_argument("Entry not found");
     }
 }
+
+void PasswordManager::changeDataSavingPath(const std::string& path) const
+{
+    storage->setPath(path);
+}
+
+void PasswordManager::saveData(const std::string& password) const
+{
+    storage->saveToFile(entries, password);
+}
+
+void PasswordManager::loadData(const std::string& password)
+{
+    entries = storage->loadFromFile(password);
+}
+
+std::string PasswordManager::generatePassword() const
+{
+    return passwordGenerator->generate();
+}
