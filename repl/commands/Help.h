@@ -14,10 +14,10 @@ namespace repl::commands
     {
        const CommandsRegistry& commands;
     public:
-        Help(
+        explicit Help(
             PasswordManager& passwordManager,
             const CommandsRegistry& commands
-            ) : CommandBase(passwordManager, "help", "Show help"), commands(commands) {}
+            ) : CommandBase(passwordManager, "help", "Show help."), commands(commands) {}
 
         void run(const int& argc, char* argv[]) override;
     };

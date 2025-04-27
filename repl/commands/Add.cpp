@@ -10,34 +10,31 @@ namespace repl::commands
 {
     void Add::run(const int& argc, char* argv[])
     {
-        std::cout << "add" << std::endl;
+        cxxopts::Options options(name, description);
 
-        cxxopts::Options addOptions(name, description);
+        options.add_options()
+            ("h,help", "Show help.")
+            ("n,name", "Entry name.", cxxopts::value<std::string>())
+            ("l,login", "Login.", cxxopts::value<std::string>())
+            ("p,password", "Password.", cxxopts::value<std::string>())
+            ("g,generate", "Generate random password instead of typing.")
+            ("o,notes", "Notes.", cxxopts::value<std::string>()->default_value(""));
 
-        addOptions.add_options()
-            ("n,name", "Entry name", cxxopts::value<std::string>())
-            ("l,login", "Login", cxxopts::value<std::string>())
-            ("p,password", "Password", cxxopts::value<std::string>())
-            ("o,notes", "Notes", cxxopts::value<std::string>()->default_value(""))
-            ("h,help", "Show help");
+        const auto result = options.parse(argc, argv);
 
-        const auto addResult = addOptions.parse(argc, argv);
-
-        std::cout << addResult.arguments_string() << std::endl;
-
-        if (addResult.count("help"))
+        if (result.count("help"))
         {
-            std::cout << addOptions.help() << std::endl;
+            std::cout << options.help() << std::endl;
             return;
         }
 
         std::string name, login, password, notes;
-        if (addResult.count("name") && addResult.count("login") && addResult.count("password"))
+        if (result.count("name") && result.count("login") && result.count("password"))
         {
-            name = addResult["name"].as<std::string>();
-            login = addResult["login"].as<std::string>();
-            password = addResult["password"].as<std::string>();
-            notes = addResult.count("notes") ? addResult["notes"].as<std::string>() : "";
+            name = result["name"].as<std::string>();
+            login = result["login"].as<std::string>();
+            password = result["password"].as<std::string>();
+            notes = result.count("notes") ? result["notes"].as<std::string>() : "";
         }
         else
         {
@@ -47,11 +44,16 @@ namespace repl::commands
             std::cout << "Enter login: ";
             std::getline(std::cin, login);
 
-            std::cout << "Enter password: ";
+            std::cout << "Enter password (don't type anything and press ENTER to use generator): ";
             std::getline(std::cin, password);
 
             std::cout << "Enter notes (optional): ";
             std::getline(std::cin, notes);
+        }
+
+        if (password.empty())
+        {
+            password = passwordManager.generatePassword();
         }
 
         passwordManager.addEntry({name, login, password, notes});

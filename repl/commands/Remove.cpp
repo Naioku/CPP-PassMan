@@ -9,19 +9,17 @@ namespace repl::commands
 {
     void Remove::run(const int& argc, char* argv[])
     {
-        std::cout << "remove" << std::endl;
+        cxxopts::Options options(name,description);
 
-        cxxopts::Options addOptions(name,description);
-
-        addOptions.add_options()
+        options.add_options()
             ("n,name", "Entry name", cxxopts::value<std::string>())
             ("h,help", "Show help");
 
-        const auto addResult = addOptions.parse(argc, argv);
+        const auto addResult = options.parse(argc, argv);
 
         if (addResult.count("help"))
         {
-            std::cout << addOptions.help() << std::endl;
+            std::cout << options.help() << std::endl;
             return;
         }
 

@@ -37,11 +37,6 @@ void PasswordManager::removeEntry(const std::string& name)
     }
 }
 
-void PasswordManager::changeDataSavingPath(const std::string& path) const
-{
-    storage->setPath(path);
-}
-
 void PasswordManager::saveData(const std::string& password) const
 {
     storage->saveToFile(entries, password);

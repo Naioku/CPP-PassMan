@@ -7,8 +7,8 @@ namespace repl::commands
     class List final : public CommandBase
     {
     public:
-        List(PasswordManager& passwordManager)
-            : CommandBase(passwordManager, "list", "List all entries") {}
+        explicit List(PasswordManager& passwordManager)
+            : CommandBase(passwordManager, "list", "List all entries.") {}
 
         void run(const int& argc, char* argv[]) override;
     };

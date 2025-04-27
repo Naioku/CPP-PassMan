@@ -5,9 +5,12 @@
 #include "PasswordManager.h"
 #include "commands/CommandsRegistry.h"
 #include "commands/Add.h"
+#include "commands/Generate.h"
+#include "commands/Storage.h"
 #include "commands/Help.h"
 #include "commands/List.h"
 #include "commands/Remove.h"
+#include "commands/Settings.h"
 
 std::vector<std::string> splitInputIntoArgs(const std::string& input);
 void passMan(const int& argc, char* argv[], const repl::commands::CommandsRegistry&);
@@ -27,6 +30,9 @@ int main(const int argc, char* argv[])
     commandsRegistry.registerCommand<repl::commands::Add>(passwordManager);
     commandsRegistry.registerCommand<repl::commands::Remove>(passwordManager);
     commandsRegistry.registerCommand<repl::commands::List>(passwordManager);
+    commandsRegistry.registerCommand<repl::commands::Storage>(passwordManager);
+    commandsRegistry.registerCommand<repl::commands::Generate>(passwordManager);
+    commandsRegistry.registerCommand<repl::commands::Settings>(passwordManager);
 
     while (true)
     {

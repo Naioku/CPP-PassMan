@@ -9,6 +9,12 @@
         commands/Help.cpp
         commands/Help.h
         commands/CommandsRegistry.h
+        commands/Storage.cpp
+        commands/Storage.h
+        commands/Generate.cpp
+        commands/Generate.h
+        commands/Settings.cpp
+        commands/Settings.h
 )
 
 target_link_libraries(PassMan PassManLib)

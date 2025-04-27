@@ -8,8 +8,8 @@ namespace repl::commands
     class Remove final : public CommandBase
     {
     public:
-        Remove(PasswordManager& passwordManager)
-            : CommandBase(passwordManager, "remove", "Remove entry") {}
+        explicit Remove(PasswordManager& passwordManager)
+            : CommandBase(passwordManager, "remove", "Remove entry.") {}
 
         void run(const int& argc, char* argv[]) override;
     };
