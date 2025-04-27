@@ -8,11 +8,6 @@ Storage::Storage(std::shared_ptr<ICryptoEngine> cryptoEngine, std::string path):
 {
 }
 
-void Storage::setPath(std::string path)
-{
-    this->path = std::move(path);
-}
-
 void Storage::saveToFile(const std::map<std::string, PasswordEntry>& entries, const std::string& password) const
 {
     nlohmann::json j;
@@ -23,7 +18,7 @@ void Storage::saveToFile(const std::map<std::string, PasswordEntry>& entries, co
 
     const std::string encryptedData = cryptoEngine->encrypt(j.dump(), password);
 
-    std::ofstream file(path);
+    std::ofstream file(path, std::ios::binary | std::ios::trunc);
     if (!file)
     {
         throw std::ios_base::failure("File cannot be opened.");
@@ -35,7 +30,7 @@ void Storage::saveToFile(const std::map<std::string, PasswordEntry>& entries, co
 
 std::map<std::string, PasswordEntry> Storage::loadFromFile(const std::string& password) const
 {
-    std::ifstream file(path);
+    std::ifstream file(path, std::ios::binary);
     if (!file)
     {
         throw std::ios_base::failure("File cannot be opened.");

@@ -9,11 +9,13 @@ class PasswordGenerator {
     const std::string DIGITS = "0123456789";
     const std::string SYMBOLS = "!@#$%^&*()-_=+[]{};:,.<>?";
 
-    int passwordSize;
+    size_t passwordSize;
 
 public:
     explicit PasswordGenerator(const int& passwordSize);
     std::string generate() const;
+    void setPasswordSize(const size_t size) { passwordSize = size; }
+    size_t getPasswordSize() const { return passwordSize; }
 
 private:
     static char generateRandomChar(const std::string& charset);
