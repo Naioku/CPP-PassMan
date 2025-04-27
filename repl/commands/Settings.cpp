@@ -1,5 +1,4 @@
-﻿
-#include "Settings.h"
+﻿#include "Settings.h"
 
 #include <cxxopts.hpp>
 #include <iostream>
@@ -34,7 +33,14 @@ namespace repl::commands
         }
         else if (result.count("gen-pass-size"))
         {
-            passwordManager.setGeneratedPasswordSize(result["gen-pass-size"].as<std::size_t>());
+            const size_t size = result["gen-pass-size"].as<std::size_t>();
+            if (size < PASSWORD_MIN_SIZE)
+            {
+                std::cerr << "Invalid size. Must be 20 or greater." << std::endl;
+                return;
+            }
+
+            passwordManager.setGeneratedPasswordSize(size);
         }
     }
 }

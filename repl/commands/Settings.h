@@ -5,6 +5,7 @@
 
 namespace repl::commands
 {
+    constexpr size_t PASSWORD_MIN_SIZE = 20;
 
     class Settings final : public CommandBase
     {
