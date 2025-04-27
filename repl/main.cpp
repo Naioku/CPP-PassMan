@@ -2,6 +2,10 @@
 #include <iostream>
 #include <cxxopts.hpp>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "PasswordManager.h"
 #include "commands/CommandsRegistry.h"
 #include "commands/Add.h"
@@ -12,17 +16,13 @@
 #include "commands/Remove.h"
 #include "commands/Settings.h"
 
+void enableVirtualTerminalProcessing();
 std::vector<std::string> splitInputIntoArgs(const std::string& input);
 void passMan(const int& argc, char* argv[], const repl::commands::CommandsRegistry&);
 
-//     {CHANGE_PATH, {"change-path", "c", changePath, "Change data saving path"}},
-//     {SAVE, {"save", "s", save, "Save data"}},
-//     {LOAD, {"load", "l", load, "Load data"}},
-// };
-
-
-int main(const int argc, char* argv[])
+int main()
 {
+    enableVirtualTerminalProcessing();
     PasswordManager passwordManager{};
     repl::commands::CommandsRegistry commandsRegistry{};
 
@@ -55,6 +55,26 @@ int main(const int argc, char* argv[])
     }
 
     return 0;
+}
+
+void enableVirtualTerminalProcessing()
+{
+#ifdef _WIN32
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode))
+    {
+        return;
+    }
+
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+#endif
 }
 
 std::vector<std::string> splitInputIntoArgs(const std::string& input)
