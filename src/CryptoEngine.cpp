@@ -51,6 +51,7 @@ std::string CryptoEngine::encrypt(const std::string& plaintext, const std::strin
     result.append(reinterpret_cast<char*>(nonce), NONCE_SIZE);
     result.append(reinterpret_cast<char*>(ciphertext.data()), ciphertext.size());
 
+    sodium_memzero(key, KEY_SIZE);
     return result;
 }
 
@@ -86,5 +87,6 @@ std::string CryptoEngine::decrypt(const std::string& ciphertext, const std::stri
         throw std::runtime_error("decryption failed (bad password?)");
     }
 
+    sodium_memzero(key, KEY_SIZE);
     return {reinterpret_cast<char*>(decryptedData.data()), decryptedData.size()};
 }
