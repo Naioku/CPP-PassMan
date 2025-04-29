@@ -1,5 +1,4 @@
-﻿
-#include "Add.h"
+﻿#include "Add.h"
 
 #include <cxxopts.hpp>
 #include <iostream>
@@ -16,8 +15,7 @@ namespace repl::commands
             ("h,help", "Show help.")
             ("n,name", "Entry name.", cxxopts::value<std::string>())
             ("l,login", "Login.", cxxopts::value<std::string>())
-            ("p,password", "Password.", cxxopts::value<std::string>())
-            ("g,generate", "Generate random password instead of typing.")
+            ("p,password", "Password. Omit in case You want to generate one.", cxxopts::value<std::string>()->default_value(""))
             ("o,notes", "Notes.", cxxopts::value<std::string>()->default_value(""));
 
         const auto result = options.parse(argc, argv);
@@ -29,12 +27,12 @@ namespace repl::commands
         }
 
         std::string name, login, password, notes;
-        if (result.count("name") && result.count("login") && result.count("password"))
+        if (result.count("name") && result.count("login"))
         {
             name = result["name"].as<std::string>();
             login = result["login"].as<std::string>();
             password = result["password"].as<std::string>();
-            notes = result.count("notes") ? result["notes"].as<std::string>() : "";
+            notes = result["notes"].as<std::string>();
         }
         else
         {
